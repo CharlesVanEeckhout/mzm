@@ -2,54 +2,39 @@
 .SUFFIXES:
 
 REGION ?= us
-PAD_TO = 0x08800000
 
 ifeq ($(REGION),us)
 	TARGET = payload_us
-	GAME_TITLE = "NES METROID"
-	GAME_CODE = "    "
 	CPPFLAGS += -DREGION_US
 	ASFLAGS += --defsym REGION_US=1
 endif
 
-# ifeq ($(REGION),us_beta)
-# 	TARGET = payload_us_beta
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXE
-# 	CPPFLAGS += -DREGION_US -DREGION_US_BETA -DDEBUG
-# 	ASFLAGS += --defsym REGION_US=1 --defsym REGION_US_BETA=1 --defsym DEBUG=1
-# 	PAD_TO = 0x09000000
-# endif
+ifeq ($(REGION),us_beta)
+	TARGET = payload_us_beta
+	CPPFLAGS += -DREGION_US -DREGION_US_BETA -DDEBUG
+	ASFLAGS += --defsym REGION_US=1 --defsym REGION_US_BETA=1 --defsym DEBUG=1
+endif
 
-# ifeq ($(REGION),eu)
-# 	TARGET = payload_eu
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXP
-# 	CPPFLAGS += -DREGION_EU
-# 	ASFLAGS += --defsym REGION_EU=1
-# endif
+ifeq ($(REGION),eu)
+	TARGET = payload_eu
+	CPPFLAGS += -DREGION_EU
+	ASFLAGS += --defsym REGION_EU=1
+endif
 
-# ifeq ($(REGION),eu_beta)
-# 	TARGET = payload_eu_beta
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXP
-# 	CPPFLAGS += -DREGION_EU -DREGION_EU_BETA -DDEBUG
-# 	ASFLAGS += --defsym REGION_EU=1 --defsym REGION_EU_BETA=1 --defsym DEBUG=1
-# 	PAD_TO = 0x09000000
-# endif
+ifeq ($(REGION),eu_beta)
+	TARGET = payload_eu_beta
+	CPPFLAGS += -DREGION_EU -DREGION_EU_BETA -DDEBUG
+	ASFLAGS += --defsym REGION_EU=1 --defsym REGION_EU_BETA=1 --defsym DEBUG=1
+endif
 
-# ifeq ($(REGION),jp)
-# 	TARGET = payload_jp
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXJ
-# 	CPPFLAGS += -DREGION_JP
-# 	ASFLAGS += --defsym REGION_JP=1
-# endif
+ifeq ($(REGION),jp)
+	TARGET = payload_jp
+	CPPFLAGS += -DREGION_JP
+	ASFLAGS += --defsym REGION_JP=1
+endif
 
 # ifeq ($(REGION),cn)
 # 	TARGET = payload_cn
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXC
 # 	CPPFLAGS += -DREGION_CN
 #	ASFLAGS += --defsym REGION_CN=1
 # endif
@@ -192,8 +177,6 @@ help:
 $(TARGET): $(ELF)
 	$(MSG) OBJCOPY $@
 	$Q$(OBJCOPY) -O binary --gap-fill 0xff $< $@
-# 	$(MSG) GBAFIX $@
-# 	$Q$(GBAFIX) $@ -t$(GAME_TITLE)  -m$(MAKER_CODE) -r$(GAME_REVISION)
 
 $(ELF) $(MAP): $(OBJ) $(LD_SCRIPT)
 	$(MSG) LD $@

@@ -2,54 +2,39 @@
 .SUFFIXES:
 
 REGION ?= us
-PAD_TO = 0x08800000
 
 ifeq ($(REGION),us)
 	TARGET = emulator_us
-	GAME_TITLE = "NES METROID"
-	GAME_CODE = "    "
 	CPPFLAGS += -DREGION_US
 	ASFLAGS += --defsym REGION_US=1
 endif
 
-# ifeq ($(REGION),us_beta)
-# 	TARGET = emulator_us_beta
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXE
-# 	CPPFLAGS += -DREGION_US -DREGION_US_BETA -DDEBUG
-# 	ASFLAGS += --defsym REGION_US=1 --defsym REGION_US_BETA=1 --defsym DEBUG=1
-# 	PAD_TO = 0x09000000
-# endif
+ifeq ($(REGION),us_beta)
+	TARGET = emulator_us_beta
+	CPPFLAGS += -DREGION_US -DREGION_US_BETA -DDEBUG
+	ASFLAGS += --defsym REGION_US=1 --defsym REGION_US_BETA=1 --defsym DEBUG=1
+endif
 
-# ifeq ($(REGION),eu)
-# 	TARGET = emulator_eu
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXP
-# 	CPPFLAGS += -DREGION_EU
-# 	ASFLAGS += --defsym REGION_EU=1
-# endif
+ifeq ($(REGION),eu)
+	TARGET = emulator_eu
+	CPPFLAGS += -DREGION_EU
+	ASFLAGS += --defsym REGION_EU=1
+endif
 
-# ifeq ($(REGION),eu_beta)
-# 	TARGET = emulator_eu_beta
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXP
-# 	CPPFLAGS += -DREGION_EU -DREGION_EU_BETA -DDEBUG
-# 	ASFLAGS += --defsym REGION_EU=1 --defsym REGION_EU_BETA=1 --defsym DEBUG=1
-# 	PAD_TO = 0x09000000
-# endif
+ifeq ($(REGION),eu_beta)
+	TARGET = emulator_eu_beta
+	CPPFLAGS += -DREGION_EU -DREGION_EU_BETA -DDEBUG
+	ASFLAGS += --defsym REGION_EU=1 --defsym REGION_EU_BETA=1 --defsym DEBUG=1
+endif
 
-# ifeq ($(REGION),jp)
-# 	TARGET = emulator_jp
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXJ
-# 	CPPFLAGS += -DREGION_JP
-# 	ASFLAGS += --defsym REGION_JP=1
-# endif
+ifeq ($(REGION),jp)
+	TARGET = emulator_jp
+	CPPFLAGS += -DREGION_JP
+	ASFLAGS += --defsym REGION_JP=1
+endif
 
 # ifeq ($(REGION),cn)
 # 	TARGET = emulator_cn
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXC
 # 	CPPFLAGS += -DREGION_CN
 #	ASFLAGS += --defsym REGION_CN=1
 # endif
@@ -230,23 +215,23 @@ $(TOOLS_DIR)/%: $(TOOLS_DIR)/%.c
 # cn cn_debug
 
 us:
-	$(MAKE) REGION=us
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) REGION=us
 us_debug:
-	$(MAKE) REGION=us DEBUG=1
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) REGION=us DEBUG=1
 us_beta:
-	$(MAKE) REGION=us_beta
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) REGION=us_beta
 
 eu:
-	$(MAKE) REGION=eu
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) REGION=eu
 eu_debug:
-	$(MAKE) REGION=eu DEBUG=1
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) REGION=eu DEBUG=1
 eu_beta:
-	$(MAKE) REGION=eu_beta
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) REGION=eu_beta
 
 jp:
-	$(MAKE) REGION=jp
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) REGION=jp
 jp_debug:
-	$(MAKE) REGION=jp DEBUG=1
+	$(MAKE) -f $(lastword $(MAKEFILE_LIST)) REGION=jp DEBUG=1
 
 # cn:
 # 	$(MAKE) REGION=cn

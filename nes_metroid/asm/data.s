@@ -2,13 +2,25 @@
     .include "asm/macros.inc"
 
 _087D8150:
+.if (REGION_JP)
+    .incbin "payload/payload_jp.gba.lz"
+.else
     .incbin "payload/payload_us.gba.lz"
+.endif
     .align 4, 0
 
 _087D8360:
+.if (REGION_JP)
+    .incbin "emulator/emulator_jp.gba.lz"
+.else
     .incbin "emulator/emulator_us.gba.lz"
+.endif
 _087DCDB0:
+.if (REGION_JP)
+    .incbin "emulator/emulatorUnused_jp.gba"
+.else
     .incbin "emulator/emulatorUnused_us.gba"
+.endif
 
 _087DCF60:
     .incbin "data/M1_NES_MZMUS.nes.lz"

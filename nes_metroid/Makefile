@@ -2,7 +2,6 @@
 .SUFFIXES:
 
 REGION ?= us
-PAD_TO = 0x08800000
 
 ifeq ($(REGION),us)
 	TARGET = nes_metroid_us
@@ -12,39 +11,37 @@ ifeq ($(REGION),us)
 	ASFLAGS += --defsym REGION_US=1
 endif
 
-# ifeq ($(REGION),us_beta)
-# 	TARGET = nes_metroid_us_beta
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXE
-# 	CPPFLAGS += -DREGION_US -DREGION_US_BETA -DDEBUG
-# 	ASFLAGS += --defsym REGION_US=1 --defsym REGION_US_BETA=1 --defsym DEBUG=1
-# 	PAD_TO = 0x09000000
-# endif
+ifeq ($(REGION),us_beta)
+	TARGET = nes_metroid_us_beta
+	GAME_TITLE = "NES METROID"
+	GAME_CODE = "    "
+	CPPFLAGS += -DREGION_US -DREGION_US_BETA -DDEBUG
+	ASFLAGS += --defsym REGION_US=1 --defsym REGION_US_BETA=1 --defsym DEBUG=1
+endif
 
-# ifeq ($(REGION),eu)
-# 	TARGET = nes_metroid_eu
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXP
-# 	CPPFLAGS += -DREGION_EU
-# 	ASFLAGS += --defsym REGION_EU=1
-# endif
+ifeq ($(REGION),eu)
+	TARGET = nes_metroid_eu
+	GAME_TITLE = "NES METROID"
+	GAME_CODE = "    "
+	CPPFLAGS += -DREGION_EU
+	ASFLAGS += --defsym REGION_EU=1
+endif
 
-# ifeq ($(REGION),eu_beta)
-# 	TARGET = nes_metroid_eu_beta
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXP
-# 	CPPFLAGS += -DREGION_EU -DREGION_EU_BETA -DDEBUG
-# 	ASFLAGS += --defsym REGION_EU=1 --defsym REGION_EU_BETA=1 --defsym DEBUG=1
-# 	PAD_TO = 0x09000000
-# endif
+ifeq ($(REGION),eu_beta)
+	TARGET = nes_metroid_eu_beta
+	GAME_TITLE = "NES METROID"
+	GAME_CODE = "    "
+	CPPFLAGS += -DREGION_EU -DREGION_EU_BETA -DDEBUG
+	ASFLAGS += --defsym REGION_EU=1 --defsym REGION_EU_BETA=1 --defsym DEBUG=1
+endif
 
-# ifeq ($(REGION),jp)
-# 	TARGET = nes_metroid_jp
-# 	GAME_TITLE = NES METROID
-# 	GAME_CODE = BMXJ
-# 	CPPFLAGS += -DREGION_JP
-# 	ASFLAGS += --defsym REGION_JP=1
-# endif
+ifeq ($(REGION),jp)
+	TARGET = nes_metroid_jp
+	GAME_TITLE = "NES METROID"
+	GAME_CODE = "    "
+	CPPFLAGS += -DREGION_JP
+	ASFLAGS += --defsym REGION_JP=1
+endif
 
 # ifeq ($(REGION),cn)
 # 	TARGET = nes_metroid_cn
@@ -200,10 +197,10 @@ help:
 asm/data.o: emulator/emulator_$(REGION).gba.lz emulator/emulatorUnused_$(REGION).gba payload/payload_$(REGION).gba.lz data/M1_NES_MZMUS.nes.lz
 
 emulator/emulator_$(REGION).gba:
-	@$(MAKE) -C emulator
+	$(MAKE) -C emulator -r $(REGION)
 
 emulator/emulator_$(REGION)_part6.gba:
-	@$(MAKE) -C emulator -f Makefile_part6.mk
+	$(MAKE) -C emulator -f Makefile_part6.mk -r $(REGION)
 
 emulator/emulator_$(REGION).gba.lz: emulator/emulator_$(REGION).gba emulator/emulator_$(REGION)_part6.gba
 	$(PYTHON) $(TOOLS_DIR)/nes_metroid/emulatorPart6Combiner.py $< $(<:.gba=.map) $(<:.gba=_part6.gba)
@@ -213,7 +210,7 @@ emulator/emulatorUnused_$(REGION).gba: emulator/emulator_$(REGION).gba
 	$(PYTHON) $(TOOLS_DIR)/nes_metroid/emulatorUnusedExtractor.py $< $@
 
 payload/payload_$(REGION).gba:
-	@$(MAKE) -C payload
+	@$(MAKE) -C payload -r $(REGION)
 
 payload/payload_$(REGION).gba.lz: payload/payload_$(REGION).gba
 	$(PYTHON) $(TOOLS_DIR)/nes_metroid/payloadCompressor.py $<

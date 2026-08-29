@@ -103,8 +103,8 @@ PREPROCFLAGS = charmap.txt
 # Objects
 CSRC = $(wildcard src/**.c) $(wildcard src/**/**.c) $(wildcard src/**/**/**.c) $(wildcard src/**/**/**/**.c)
 .PRECIOUS: $(CSRC:.c=.s)
-ASMSRC = $(CSRC:.c=.s) $(wildcard asm/*.s) $(wildcard sound/*.s) $(wildcard sound/**/*.s) $(wildcard sound/**/**/*.s)
-OBJ = $(ASMSRC:.s=.o) 
+ASMSRC = $(CSRC:.c=.s) $(wildcard asm/*.s) $(wildcard asm/*.sx)
+OBJ = $(addsuffix .o, $(basename $(ASMSRC)))
 
 # Dynamically find agbcc path and its lib folder
 AGBCC_BIN := $(shell which agbcc)
@@ -237,10 +237,13 @@ $(LD_SCRIPT): linker.ld
 	$Q$(OBJDUMP) -D -bbinary -marm7tdmi -Mforce-thumb  $< | $(TAIL) -n+3 >$@
 #--stop-address 0x8c71c
 %.o: %.s
-	$(MSG) AS $@
+	$(MSG) AS N $@
 	$Q$(AS) $(ASFLAGS) $< -o $@
+%.o: %.sx
+	$(MSG) AS X $@
+	$(AS) $(ASFLAGS) -v $< -o $@
 
-%.s: %.c
+%.s %.sx: %.c
 	$(MSG) CC $@
 	$Q$(PREPROC) $< $(PREPROCFLAGS) | $(CPP) $(CPPFLAGS) | $(CC) -o $@ $(CFLAGS) && printf '\t.align 2, 0 @ dont insert nops\n' >> $@
 

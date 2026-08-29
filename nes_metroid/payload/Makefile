@@ -193,8 +193,11 @@ $(LD_SCRIPT): linker.ld
 %.o: %.s
 	$(MSG) AS $@
 	$Q$(AS) $(ASFLAGS) $< -o $@
+%.o: %.sx
+	$(MSG) AS $@
+	$Q$(AS) $(ASFLAGS) $< -o $@
 
-%.s: %.c
+%.s %.sx: %.c
 	$(MSG) CC $@
 	$Q$(PREPROC) $< $(PREPROCFLAGS) | $(CPP) $(CPPFLAGS) | $(CC) -o $@ $(CFLAGS) && printf '\t.align 2, 0 @ dont insert nops\n' >> $@
 

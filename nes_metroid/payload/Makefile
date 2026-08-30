@@ -90,8 +90,8 @@ PREPROCFLAGS = charmap.txt
 # Objects
 CSRC = $(wildcard src/**.c) $(wildcard src/**/**.c) $(wildcard src/**/**/**.c) $(wildcard src/**/**/**/**.c)
 .PRECIOUS: $(CSRC:.c=.s)
-ASMSRC = $(CSRC:.c=.s) $(wildcard asm/*.s) $(wildcard sound/*.s) $(wildcard sound/**/*.s) $(wildcard sound/**/**/*.s)
-OBJ = $(ASMSRC:.s=.o) 
+ASMSRC = $(CSRC:.c=.s) $(wildcard asm/*.s)
+OBJ = $(ASMSRC:.s=.o)
 
 # Dynamically find agbcc path and its lib folder
 AGBCC_BIN := $(shell which agbcc)
@@ -193,11 +193,8 @@ $(LD_SCRIPT): linker.ld
 %.o: %.s
 	$(MSG) AS $@
 	$Q$(AS) $(ASFLAGS) $< -o $@
-%.o: %.sx
-	$(MSG) AS $@
-	$Q$(AS) $(ASFLAGS) $< -o $@
 
-%.s %.sx: %.c
+%.s: %.c
 	$(MSG) CC $@
 	$Q$(PREPROC) $< $(PREPROCFLAGS) | $(CPP) $(CPPFLAGS) | $(CC) -o $@ $(CFLAGS) && printf '\t.align 2, 0 @ dont insert nops\n' >> $@
 

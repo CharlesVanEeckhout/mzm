@@ -3,7 +3,7 @@ import argparse
 from lz import *
 
 
-NESTROID_EMULATOR_ADDR_REL = 0x2AE
+NESTROID_EMULATOR_ADDR_REL = 0xB2 + 0x2AE
 NESTROID_EMULATOR_DECOMP_SIZE = 0x8574
 
 
@@ -18,7 +18,8 @@ if __name__ == "__main__":
         f.seek(NESTROID_EMULATOR_ADDR_REL)
         data = f.read()
     
-    decomp_data, _ = decomp_lz_custom(data, 0, NESTROID_EMULATOR_DECOMP_SIZE)
+    decomp_data, comp_len = decomp_lz_custom(data, 0, NESTROID_EMULATOR_DECOMP_SIZE)
+    print(comp_len)
     
     with open(args.output_path, "wb") as f:
         f.write(decomp_data)

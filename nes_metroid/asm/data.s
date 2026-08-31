@@ -24,7 +24,7 @@ _087DCDB0:
 
 .global _087DCF60
 _087DCF60:
-    .incbin "data/M1_NES_MZMUS.nes.lz"
+    .incbin "data/M1_NES_MZM.nes.lz"
     .align 2, 0
 
 

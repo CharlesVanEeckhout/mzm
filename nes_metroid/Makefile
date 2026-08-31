@@ -143,7 +143,7 @@ diff: $(DUMPS)
 extract:
 	$(MSG) Extracting
 	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/gfxExtractor.py ../mzm_$(REGION)_baserom.gba data/gfx/
-	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/romExtractor.py ../mzm_$(REGION)_baserom.gba data/M1_NES_MZMUS.nes
+	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/romExtractor.py ../mzm_$(REGION)_baserom.gba data/M1_NES_MZM.nes
 	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/paletteExtractor.py ../mzm_$(REGION)_baserom.gba data/palette.pal.lz
 
 .PHONY: clean
@@ -194,7 +194,7 @@ help:
 	@echo '  DEBUG=1: enables the debug code'
 
 
-asm/data.o: emulator/emulator_$(REGION).gba.lz emulator/emulatorUnused_$(REGION).gba payload/payload_$(REGION).gba.lz data/M1_NES_MZMUS.nes.lz
+asm/data.o: emulator/emulator_$(REGION).gba.lz emulator/emulatorUnused_$(REGION).gba payload/payload_$(REGION).gba.lz data/M1_NES_MZM.nes.lz
 
 emulator/emulator_$(REGION).gba:
 	$(MAKE) -C emulator -r $(REGION)
@@ -215,8 +215,8 @@ payload/payload_$(REGION).gba:
 payload/payload_$(REGION).gba.lz: payload/payload_$(REGION).gba
 	$(PYTHON) $(TOOLS_DIR)/nes_metroid/payloadCompressor.py $<
 
-data/M1_NES_MZMUS.nes.lz:
-	$(PYTHON) $(TOOLS_DIR)/nes_metroid/romCompressor.py data/M1_NES_MZMUS.nes
+data/M1_NES_MZM.nes.lz:
+	$(PYTHON) $(TOOLS_DIR)/nes_metroid/romCompressor.py data/M1_NES_MZM.nes
 
 $(TARGET): $(ELF) $(GBAFIX)
 	$(MSG) OBJCOPY $@

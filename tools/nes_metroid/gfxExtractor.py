@@ -32,8 +32,6 @@ from lz import *
 087F33F8: decompress 087F7544 to 02035980(size 0040) (06:9980, GFX_Solid)
 """
 
-NES_METROID_BIN_ADDR = 0x7D80B2
-NES_METROID_BIN_SIZE = 0x1F682
 GFX_ENTRY_TABLE_PTR_ADDR = 0x7D80CC
 GFX_ENTRY_NAMES = [
     "GFX_SamusSuitless",
@@ -65,38 +63,38 @@ GFX_ENTRY_NAMES = [
 WRAM_NES_ROM_ADDR = 0x0201C000
 
 
-def get_nes_metroid_data(zm_path):
+def get_gfx_entry_data(zm_path):
     with open(zm_path, "rb") as f:
-        f.seek(NES_METROID_BIN_ADDR)
-        nes_metroid_data = f.read(NES_METROID_BIN_SIZE)
-    return nes_metroid_data
+        f.seek(GFX_ENTRY_TABLE_PTR_ADDR)
+        gfx_entry_table_addr = int.from_bytes(f.read(4), byteorder='little') - 0x08000000
+        gfx_entry_end_addr = int.from_bytes(f.read(4), byteorder='little') - 0x08000000
+        f.seek(gfx_entry_table_addr)
+        gfx_entry_data = f.read(gfx_entry_end_addr - gfx_entry_table_addr)
+    return gfx_entry_data, gfx_entry_table_addr
 
 
-def extract_gfx(nes_metroid_data):
-    gfx_entry_table_ptr_addr_rel = GFX_ENTRY_TABLE_PTR_ADDR - NES_METROID_BIN_ADDR
-    gfx_entry_table_addr = int.from_bytes(
-        nes_metroid_data[gfx_entry_table_ptr_addr_rel:gfx_entry_table_ptr_addr_rel+4],
-        byteorder='little', signed=True)
-    gfx_entry_table_addr_rel = gfx_entry_table_addr - NES_METROID_BIN_ADDR - 0x08000000
+def extract_gfx(zm_path):
+    gfx_entry_data, gfx_entry_table_addr = get_gfx_entry_data(zm_path)
     
-    gfx_source_addr_rel = gfx_entry_table_addr_rel + len(GFX_ENTRY_NAMES) * 2 * 2
+    gfx_source_addr_rel = len(GFX_ENTRY_NAMES) * 2 * 2
     
     gfx_entry_decomp_bytes_list = []
     gfx_entry_comp_bytes_list = []
     
     for i, gfx_entry_name in enumerate(GFX_ENTRY_NAMES):
-        gfx_entry_addr_rel = gfx_entry_table_addr_rel + i * 2 * 2
+        gfx_entry_addr_rel = i * 2 * 2
         
+        # unused
         gfx_destination_addr = WRAM_NES_ROM_ADDR + (int.from_bytes(
-            nes_metroid_data[gfx_entry_addr_rel:gfx_entry_addr_rel+2],
+            gfx_entry_data[gfx_entry_addr_rel:gfx_entry_addr_rel+2],
             byteorder='little', signed=True) << 4)
         
-        gfx_entry_decomp_bytes, gfx_comp_size = decomp_lz_bios(nes_metroid_data, gfx_source_addr_rel)
+        gfx_entry_decomp_bytes, gfx_comp_size = decomp_lz_bios(gfx_entry_data, gfx_source_addr_rel)
         gfx_entry_decomp_bytes_list.append(gfx_entry_decomp_bytes)
-        gfx_entry_comp_bytes_list.append(nes_metroid_data[gfx_source_addr_rel:gfx_source_addr_rel+gfx_comp_size])
+        gfx_entry_comp_bytes_list.append(gfx_entry_data[gfx_source_addr_rel:gfx_source_addr_rel+gfx_comp_size])
         
         gfx_source_next_offset = int.from_bytes(
-            nes_metroid_data[gfx_entry_addr_rel+2:gfx_entry_addr_rel+4],
+            gfx_entry_data[gfx_entry_addr_rel+2:gfx_entry_addr_rel+4],
             byteorder='little', signed=True)
         assert gfx_source_next_offset == (gfx_comp_size + 3) & 0xfffc
         
@@ -120,7 +118,6 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    nes_metroid_data = get_nes_metroid_data(args.zm_path)
-    _, gfx_entry_comp_bytes_list = extract_gfx(nes_metroid_data)
+    _, gfx_entry_comp_bytes_list = extract_gfx(args.zm_path)
     save_gfx(args.output_folder, gfx_entry_comp_bytes_list)
     

@@ -22,11 +22,14 @@ _087DCDB0:
     .incbin "emulator/emulatorUnused_us.gba"
 .endif
 
+.global _087DCF60
 _087DCF60:
     .incbin "data/M1_NES_MZMUS.nes.lz"
     .align 2, 0
 
-_087F3398:
+
+.global sUnk_087F3398
+sUnk_087F3398:
     .2byte (0x020350E0 - 0x0201C000) >> 4, _087F3A08 - _087F33FC
     .2byte (0x02034000 - 0x0201C000) >> 4, _087F4248 - _087F3A08
     .2byte (0x0202CD60 - 0x0201C000) >> 4, _087F4540 - _087F4248
@@ -51,7 +54,7 @@ _087F3398:
     .2byte (0x02034BE0 - 0x0201C000) >> 4, _087F7344 - _087F7028
     .2byte (0x020349A0 - 0x0201C000) >> 4, _087F73F8 - _087F7344
     .2byte (0x02035DA0 - 0x0201C000) >> 4, _087F7544 - _087F73F8
-    .2byte (0x02035980 - 0x0201C000) >> 4, _087F7558 - _087F7544
+    .2byte (0x02035980 - 0x0201C000) >> 4, sUnk_087F7558 - _087F7544
 _087F33FC:
     .incbin "data/gfx/GFX_SamusSuitless.nes.lz"
     .align 2, 0
@@ -128,7 +131,8 @@ _087F7544:
     .incbin "data/gfx/GFX_Solid.nes.lz"
     .align 2, 0
 
-_087F7558:
+.global sUnk_087F7558
+sUnk_087F7558:
     .incbin "data/palette.pal.lz"
     .align 2, 0
 

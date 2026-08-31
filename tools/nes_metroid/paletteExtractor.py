@@ -7,23 +7,18 @@ from lz import *
 # decompress 087F7558-087F7731 to 0600B800-0600B9FF
 
 
-NES_METROID_BIN_ADDR = 0x7D80B2
-NES_METROID_BIN_SIZE = 0x1F682
-NESTROID_PALETTE_ADDR = 0x7F7558
+NES_PALETTE_PTR_ADDR = 0x7D80D0
 
 
-def get_nes_metroid_data(zm_path):
+def extract_palette(zm_path):
     with open(zm_path, "rb") as f:
-        f.seek(NES_METROID_BIN_ADDR)
-        nes_metroid_data = f.read(NES_METROID_BIN_SIZE)
-    return nes_metroid_data
-
-
-def extract_palette(nes_metroid_data):
-    nestroid_palette_addr_rel = NESTROID_PALETTE_ADDR - NES_METROID_BIN_ADDR
+        f.seek(NES_PALETTE_PTR_ADDR)
+        nes_palette_addr = int.from_bytes(f.read(4), byteorder='little') - 0x08000000
+        f.seek(nes_palette_addr)
+        nes_palette_data = f.read(0x1000)
     
-    decomp_bytes, comp_size = decomp_lz_bios(nes_metroid_data, nestroid_palette_addr_rel)
-    comp_bytes = nes_metroid_data[nestroid_palette_addr_rel:nestroid_palette_addr_rel+comp_size]
+    decomp_bytes, comp_size = decomp_lz_bios(nes_palette_data, 0)
+    comp_bytes = nes_palette_data[:comp_size]
     
     return decomp_bytes, comp_bytes
 
@@ -40,7 +35,6 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    nes_metroid_data = get_nes_metroid_data(args.zm_path)
-    _, comp_bytes = extract_palette(nes_metroid_data)
+    _, comp_bytes = extract_palette(args.zm_path)
     save_palette(args.output_path, comp_bytes)
     

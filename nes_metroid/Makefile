@@ -142,9 +142,9 @@ diff: $(DUMPS)
 .PHONY: extract
 extract:
 	$(MSG) Extracting
-	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/gfxExtractor.py ../mzm_us_baserom.gba data/gfx/
-	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/romExtractor.py ../mzm_us_baserom.gba data/M1_NES_MZMUS.nes
-	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/paletteExtractor.py ../mzm_us_baserom.gba data/palette.pal.lz
+	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/gfxExtractor.py ../mzm_$(REGION)_baserom.gba data/gfx/
+	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/romExtractor.py ../mzm_$(REGION)_baserom.gba data/M1_NES_MZMUS.nes
+	$Q$(PYTHON) $(TOOLS_DIR)/nes_metroid/paletteExtractor.py ../mzm_$(REGION)_baserom.gba data/palette.pal.lz
 
 .PHONY: clean
 clean:

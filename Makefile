@@ -174,6 +174,7 @@ diff: $(DUMPS)
 extract:
 	$(MSG) Extracting
 	$Q$(EXTRACTOR) -r $(REGION)
+	$(MAKE) -C nes_metroid extract REGION=$(REGION)
 
 .PHONY: clean
 clean: clean-tools tidy
@@ -207,6 +208,8 @@ ifeq ($(DATA),1)
 endif
 	$(MSG) RM $(LD_SCRIPT)
 	$Q$(RM) $(LD_SCRIPT)
+
+	@$(MAKE) clean -C nes_metroid DATA=$(DATA)
 
 .PHONY: help
 help:
@@ -250,6 +253,13 @@ $(LD_SCRIPT): linker.ld
 %.s: %.c
 	$(MSG) CC $@
 	$Q$(PREPROC) $< $(PREPROCFLAGS) | $(CPP) $(CPPFLAGS) | $(CC) -o $@ $(CFLAGS) && printf '\t.align 2, 0 @ dont insert nops\n' >> $@
+
+src/data/nes_metroid.s: src/data/nes_metroid.c
+	$(MAKE) -C nes_metroid -r $(REGION)
+	$(PYTHON) $(TOOLS_DIR)/nes_metroid/copyCompiledToDataFolder.py nes_metroid/nes_metroid_$(REGION).gba .
+	$(MSG) CC $@
+	$Q$(PREPROC) $< $(PREPROCFLAGS) | $(CPP) $(CPPFLAGS) | $(CC) -o $@ $(CFLAGS) && printf '\t.align 2, 0 @ dont insert nops\n' >> $@
+
 
 src/dma.s: CFLAGS = -Werror -O1 -mthumb-interwork -fhex-asm -f2003-patch
 src/dma.s: src/dma.c

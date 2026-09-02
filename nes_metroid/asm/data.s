@@ -5,7 +5,21 @@ _087D8150:
 .ifdef REGION_JP
     .incbin "payload/payload_jp.gba.lz"
 .else
-    .incbin "payload/payload_us.gba.lz"
+    .ifdef REGION_EU
+        .ifdef DEBUG
+            .incbin "payload/payload_eu_beta.gba.lz"
+        .else
+            .incbin "payload/payload_eu.gba.lz"
+        .endif
+    .else
+        .ifdef REGION_US
+            .ifdef DEBUG
+                .incbin "payload/payload_us_beta.gba.lz"
+            .else
+                .incbin "payload/payload_us.gba.lz"
+            .endif
+        .endif
+    .endif
 .endif
     .align 4, 0
 
@@ -13,16 +27,43 @@ _087D8360:
 .ifdef REGION_JP
     .incbin "emulator/emulator_jp.gba.lz"
 .else
-    .incbin "emulator/emulator_us.gba.lz"
+    .ifdef REGION_EU
+        .ifdef DEBUG
+            .incbin "emulator/emulator_eu_beta.gba.lz"
+        .else
+            .incbin "emulator/emulator_eu.gba.lz"
+        .endif
+    .else
+        .ifdef REGION_US
+            .ifdef DEBUG
+                .incbin "emulator/emulator_us_beta.gba.lz"
+            .else
+                .incbin "emulator/emulator_us.gba.lz"
+            .endif
+        .endif
+    .endif
 .endif
 _087DCDB0:
 .ifdef REGION_JP
     .incbin "emulator/emulatorUnused_jp.gba"
 .else
-    .incbin "emulator/emulatorUnused_us.gba"
+    .ifdef REGION_EU
+        .ifdef DEBUG
+            .incbin "emulator/emulatorUnused_eu_beta.gba"
+        .else
+            .incbin "emulator/emulatorUnused_eu.gba"
+        .endif
+    .else
+        .ifdef REGION_US
+            .ifdef DEBUG
+                .incbin "emulator/emulatorUnused_us_beta.gba"
+            .else
+                .incbin "emulator/emulatorUnused_us.gba"
+            .endif
+        .endif
+    .endif
 .endif
 
-.global _087DCF60
 _087DCF60:
     .incbin "data/M1_NES_MZM.nes.lz"
     .align 2, 0

@@ -215,8 +215,8 @@ payload/payload_$(REGION).gba:
 payload/payload_$(REGION).gba.lz: payload/payload_$(REGION).gba
 	$(PYTHON) $(TOOLS_DIR)/nes_metroid/payloadCompressor.py $<
 
-data/M1_NES_MZM.nes.lz:
-	$(PYTHON) $(TOOLS_DIR)/nes_metroid/romCompressor.py data/M1_NES_MZM.nes
+data/M1_NES_MZM.nes.lz: data/M1_NES_MZM.nes
+	$(PYTHON) $(TOOLS_DIR)/nes_metroid/romCompressor.py $<
 
 $(TARGET): $(ELF) $(GBAFIX)
 	$(MSG) OBJCOPY $@
